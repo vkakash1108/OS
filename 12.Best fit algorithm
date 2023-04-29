@@ -1,0 +1,56 @@
+#include <stdio.h>
+
+int main() {
+    int n; // number of memory partitions
+    printf("Enter the number of memory partitions: ");
+    scanf("%d", &n);
+
+    int memory[n]; // memory partitions
+    printf("Enter the memory partitions (in KB):\n");
+    for (int i = 0; i < n; i++) {
+        scanf("%d", &memory[i]);
+    }
+
+    int m; // number of processes
+    printf("Enter the number of processes: ");
+    scanf("%d", &m);
+
+    int process[m]; // memory requirements of processes
+    printf("Enter the memory requirements of processes (in KB):\n");
+    for (int i = 0; i < m; i++) {
+        scanf("%d", &process[i]);
+    }
+
+    int allocation[m]; // memory block allocated to each process
+    for (int i = 0; i < m; i++) {
+        allocation[i] = -1; // initialize to -1 to indicate unallocated
+    }
+
+    // Best-fit algorithm
+    for (int i = 0; i < m; i++) {
+        int best_index = -1; // initialize to -1 to indicate no suitable partition found yet
+        for (int j = 0; j < n; j++) {
+            if (memory[j] >= process[i]) {
+                if (best_index == -1 || memory[j] < memory[best_index]) {
+                    best_index = j;
+                }
+            }
+        }
+        if (best_index != -1) {
+            allocation[i] = best_index;
+            memory[best_index] -= process[i];
+        }
+    }
+
+    // Print memory allocation for each process
+    printf("Process\tMemory Allocated (in KB)\n");
+    for (int i = 0; i < m; i++) {
+        if (allocation[i] != -1) {
+            printf("%d\t%d\n", i, process[i]);
+        } else {
+            printf("%d\tNot Allocated\n", i);
+        }
+    }
+
+    return 0;
+}
